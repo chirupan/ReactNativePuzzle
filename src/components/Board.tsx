@@ -84,19 +84,23 @@ export function Board({
   // unpacking
   const { size, board, empty } = puzzle;
   let animatedValues: Square[] = [];
+  const height = Dimensions.get('window').height;
   // intialize the squares (each value is representing a number denoting
   // what portion of the image is to be rendered inside each grid)
   board && board.forEach((square, index) => {
     const { top, left} = calculateItemPosition(size, index);
     // all values are animated
     // Animation is always w.r.t size/scale/position aspects of a component
-    // initial values for the square animationsv 
+    // initial values for the square animations
+    const topLocation = (
+      (boardState.transitionState === State.WillTransitionIn) ? top + height : top
+    ); 
     animatedValues[square] = {
       // this is used purely for animation
       // i.e. placed outside the screen so that when animation 
       // plays they will flow to their correct position and 
       // will be shown
-      top : new Animated.Value(top),
+      top : new Animated.Value(topLocation),
       left: new Animated.Value(left),
       scale: new Animated.Value(1)
     }
@@ -105,7 +109,7 @@ export function Board({
   // function to animate all squares (i.e. animate the position of squares)
   const animateAllSquares = async (visible: boolean) => {
     const { size, board } = puzzle;
-
+    // The Dimensions api is used to get the width/height of the window.
     const height = Dimensions.get('window').height;
 
     const animations = board && board.map((square, index) => {
@@ -300,7 +304,8 @@ export function Board({
       // teardown
       if (teardown){
         // set the animations out of screen
-        //await animateAllSquares(false);
+        console.log("animate all square to false");
+        await animateAllSquares(false);
 
         // set the board state
         setBoardState({
@@ -321,7 +326,8 @@ export function Board({
       //   return;
       // }
       // animate all squares
-      // await animateAllSquares(true);
+      console.log("animate all squares to true");
+      await animateAllSquares(true);
 
       // change the state once animation is done
       setBoardState({transitionState: State.DidTransitionIn});

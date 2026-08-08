@@ -89,7 +89,6 @@ export function movableSquares(puzzle: PuzzleType): number[] {
   .filter((index): index is number => 
       index !== null && index >= 0 && index < size * size)
   .map(index => board[index]);
-  console.log("Adjacent: ", adjacent);
 
   return adjacent;
 }

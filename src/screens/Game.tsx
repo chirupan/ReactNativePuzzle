@@ -57,6 +57,8 @@ export function Game({
     elapsed: 0,
   });
 
+  console.log("Game state ", gameState.transitionState);
+
   // unpacking gamestate
   const { size } = puzzle;
   const { transitionState, moves, elapsed, previousMove } = gameState;

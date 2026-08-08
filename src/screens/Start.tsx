@@ -65,12 +65,13 @@ export function Start({
   }, []);
 
   const handlePressStart = useCallback(async () => {
+    console.log("In handlePressStart");
     await configureTransition(() => {
       setStartState(State.WillTransitionOut);
     });
 
     onStartGame();
-  }, []);
+  }, [onStartGame]);
 
   // render the UI
   return (

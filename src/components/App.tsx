@@ -23,8 +23,7 @@ export function App() {
   // puzzle should be defined only when the user clicks on start game button
   // this is because the puzzle needs to know what size to use for the board
   // let it have a default size of 3
-  const [appState, setAppState] = useState<AppState>({ size: 3});
-
+  const [appState, setAppState] = useState<AppState>({ size: 3 });
   // handler to change the size of the puzzle
   const handleChangeSize = (size: number) =>  {
     setAppState({
@@ -33,18 +32,18 @@ export function App() {
     })
   };
 
-
   // handler to start the game
-  const handleStartGame = () => {
+  const handleStartGame = async () => {
     if (appState?.size){
       // create a puzzle
+      await loadImage();
+      console.log("In handleStartGame ");
       const puzzle = createPuzzle(appState.size);
-      setAppState((previousState) => ({
+      setAppState((previousState: AppState) => ({
         ...previousState,
         puzzle: puzzle
       }));
     }
-    
   }
 
   // handler to change the game
@@ -65,9 +64,7 @@ export function App() {
     }));
   }
 
-  // side-effect
-  useEffect(() => {
-    // callback to load the image
+  // callback to load the image
   const loadImage = async(): Promise<void> => {
     try{
       const  img = await getRandomImage();
@@ -80,7 +77,9 @@ export function App() {
       console.log(`Error loading the image: ${err}`);
     }
   }
-    // call the callback
+
+  // side-effect
+  useEffect(() => {
     loadImage();
   }, []);
 
