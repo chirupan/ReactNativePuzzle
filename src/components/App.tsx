@@ -57,12 +57,12 @@ export function App() {
 
   // handler to quit the game
   const handleQuitGame = () => {
-    setAppState({
+    console.log("Quitting in App");
+    setAppState((prev: AppState) => ({
+      ...prev,
       puzzle: undefined,
       image: undefined,
-      ...appState
-    }
-    )
+    }));
   }
 
   // side-effect

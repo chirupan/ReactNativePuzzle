@@ -2,11 +2,11 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Platform,
   ImageURISource,
   StyleSheet,
   View,
 } from 'react-native';
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import { move, movableSquares, isSolved } from '../utils/puzzle';
@@ -97,7 +97,7 @@ export function Game({
     onQuit();
   }, []);
 
-  const requestTransitionOut = () => {
+  const requestTransitionOut = useCallback(() => {
     if (intervalRef.current){
       clearInterval(intervalRef.current);
     }
@@ -107,22 +107,30 @@ export function Game({
         ...prev,
         transitionState: State.RequestTransitionOut
       }));
-  };
+  }, [intervalRef]);
 
   const handlePressQuit = useCallback(() => {
-    Alert.alert(
-      'Quit',
-      'Do you want to quit and lose progress on this puzzle?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Quit',
-          style: 'destructive',
-          onPress: requestTransitionOut,
-        },
-      ],
-    );
-  }, []);
+    if (Platform.OS === "web"){
+      const confirmed = window.confirm(`Do you want to quit and lose progress on this puzzle?`);
+      if (confirmed) {
+        requestTransitionOut();
+      } else {
+        return;
+      }
+    } else {
+      Alert.alert(
+        'Quit',
+        'Do you want to quit and lose progress on this puzzle?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Quit',
+            style: 'destructive',
+            onPress: requestTransitionOut,
+          },
+        ],
+      )}}, [requestTransitionOut]);
+
 
   const handlePressSquare = useCallback((square: number) => {
     const { moves } = gameState;
